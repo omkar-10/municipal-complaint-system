@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { User, Mail, Lock, UserPlus } from "lucide-react";
+import api from "../utils/axiosInstance"; // ✅ Use axios instance
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -22,23 +23,18 @@ const Register = () => {
     }
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        }
-      );
+      const res = await api.post("/register", {
+        name,
+        email,
+        password,
+      });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
+      const data = res.data;
       localStorage.setItem("userInfo", JSON.stringify(data));
       toast.success("Registration successful!");
       navigate("/citizen/dashboard");
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response?.data?.message || "Registration failed");
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +59,7 @@ const Register = () => {
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4">
-            {/* Name */}
+            {/* Name Field */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text flex items-center gap-2">
@@ -85,7 +81,7 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Email */}
+            {/* Email Field */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text flex items-center gap-2">
