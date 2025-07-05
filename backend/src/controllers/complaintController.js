@@ -26,7 +26,8 @@ export const createComplaint = async (req, res) => {
   try {
     const { title, description, urgency, anonymous, location } = req.body;
 
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
+    // ✅ Use Cloudinary image URL instead of local uploads
+    const imageUrl = req.file ? req.file.path : "";
 
     const isAnonymous = anonymous === "true" || anonymous === true;
 
@@ -174,7 +175,7 @@ export const updateComplaint = async (req, res) => {
     complaint.anonymous = anonymous ?? complaint.anonymous;
 
     if (req.file) {
-      complaint.imageUrl = "/uploads/" + req.file.filename;
+      complaint.imageUrl = req.file.path; // ✅ Cloudinary stores image URL in `path`
     }
 
     await complaint.save();
