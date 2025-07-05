@@ -71,9 +71,7 @@ const NewComplaint = () => {
                 className="h-10 mr-3 transition-transform group-hover:scale-105"
               />
               <div>
-                <h1 className="text-xl font-bold text-gray-800">
-                  City Services
-                </h1>
+                <h1 className="text-xl font-bold text-gray-800">MC</h1>
                 <p className="text-xs text-gray-500">
                   Citizen Complaint Portal
                 </p>
