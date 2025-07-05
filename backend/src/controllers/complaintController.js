@@ -25,7 +25,7 @@ export const createComplaint = async (req, res) => {
   try {
     const { title, description, urgency, anonymous, location } = req.body;
 
-    const imageUrl = req.file ? req.file.secure_url : "";
+    const imageUrl = req.file?.path || "";
     const isAnonymous = anonymous === "true" || anonymous === true;
 
     const complaint = new Complaint({
@@ -140,7 +140,7 @@ export const updateComplaint = async (req, res) => {
     complaint.anonymous = anonymous ?? complaint.anonymous;
 
     if (req.file) {
-      complaint.imageUrl = req.file.secure_url;
+      complaint.imageUrl = req.file?.path || complaint.imageUrl;
     }
 
     await complaint.save();
