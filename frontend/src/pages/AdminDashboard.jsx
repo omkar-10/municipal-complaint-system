@@ -598,7 +598,7 @@ const AdminDashboard = () => {
                       <div className="relative group">
                         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                           <a
-                            href={`http://localhost:5001${selectedComplaint.imageUrl}`}
+                            href={selectedComplaint.imageUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-sm btn-ghost text-white"
@@ -607,7 +607,7 @@ const AdminDashboard = () => {
                           </a>
                         </div>
                         <img
-                          src={`http://localhost:5001${selectedComplaint.imageUrl}`}
+                          src={selectedComplaint.imageUrl}
                           alt="Complaint evidence"
                           className="w-full h-64 object-cover rounded-lg"
                         />

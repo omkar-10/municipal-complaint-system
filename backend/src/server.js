@@ -1,24 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import path from "path";
 import { connectDB } from "./config/db.js";
-import fs from "fs";
 
 import authRoutes from "./routes/authRoutes.js";
 import complaintRoutes from "./routes/complainRoutes.js";
 
-const uploadDir = "./uploads";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
 dotenv.config();
 
 const app = express();
-
-// Serve static files from "uploads" directory
-app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 
 // Middlewares
 app.use(cors());

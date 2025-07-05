@@ -128,7 +128,6 @@ const CitizenDashboard = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
               <AlertCircle className="text-blue-600" size={24} />
@@ -148,7 +147,6 @@ const CitizenDashboard = () => {
             </div>
           </div>
 
-          {/* No Complaints Found */}
           {filteredComplaints.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 text-center">
               {complaints.length === 0 && (
@@ -189,9 +187,13 @@ const CitizenDashboard = () => {
                     {complaint.imageUrl && (
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <img
-                          src={`http://localhost:5001${complaint.imageUrl}`}
+                          src={complaint.imageUrl}
                           alt="Complaint"
                           className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "/placeholder.jpg"; // optional fallback
+                          }}
                         />
                       </div>
                     )}
@@ -270,7 +272,6 @@ const CitizenDashboard = () => {
           )}
         </div>
 
-        {/* Floating Action Button (Mobile only) */}
         <div className="sm:hidden fixed bottom-6 right-6 z-10">
           <Link
             to="/citizen/complaints/new"
@@ -280,7 +281,6 @@ const CitizenDashboard = () => {
           </Link>
         </div>
 
-        {/* Edit Modal */}
         {editingComplaint && (
           <div className="modal modal-open">
             <div className="modal-box max-w-2xl w-full mx-4 sm:mx-6">
