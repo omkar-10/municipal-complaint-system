@@ -106,7 +106,7 @@ const NewComplaint = () => {
                   New Complaint
                 </h2>
                 <p className="text-gray-500 mt-1">
-                  Report community issues to help us serve you better
+                  Your voice matters — report issues in your area
                 </p>
               </div>
             </div>
@@ -123,7 +123,7 @@ const NewComplaint = () => {
                 <input
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
-                  placeholder="Briefly describe the issue (e.g., Pothole on Main Street)"
+                  placeholder="Briefly describe the issue"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
@@ -180,7 +180,7 @@ const NewComplaint = () => {
                   <input
                     type="text"
                     className="input input-bordered w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
-                    placeholder="Exact location or nearest landmark"
+                    placeholder="Nearest landmark"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     required

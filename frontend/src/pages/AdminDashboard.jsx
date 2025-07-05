@@ -30,7 +30,7 @@ const AdminDashboard = () => {
   const [urgencyFilter, setUrgencyFilter] = useState("All");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(5); // Reduced for better mobile experience
   const [showFilters, setShowFilters] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
@@ -96,12 +96,6 @@ const AdminDashboard = () => {
     } finally {
       setStatusUpdateLoading(null);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("userInfo");
-    toast.success("Logged out successfully");
-    navigate("/");
   };
 
   const applyFilters = () => {
@@ -199,83 +193,85 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminNavbar></AdminNavbar>
+      <AdminNavbar />
 
-      <div className="p-6">
-        {/* Stats Panel */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-gray-500">Total Complaints</div>
-            <div className="text-2xl font-bold">{stats.total}</div>
+      <div className="p-4 sm:p-6">
+        {/* Stats Panel - Responsive Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-xs sm:text-sm text-gray-500">Total</div>
+            <div className="text-xl sm:text-2xl font-bold">{stats.total}</div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-gray-500">Pending</div>
-            <div className="text-2xl font-bold text-yellow-500">
+          <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-xs sm:text-sm text-gray-500">Pending</div>
+            <div className="text-xl sm:text-2xl font-bold text-yellow-500">
               {stats.pending}
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-gray-500">Resolved</div>
-            <div className="text-2xl font-bold text-green-500">
+          <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-xs sm:text-sm text-gray-500">Resolved</div>
+            <div className="text-xl sm:text-2xl font-bold text-green-500">
               {stats.resolved}
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-gray-500">Rejected</div>
-            <div className="text-2xl font-bold text-red-500">
+          <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-xs sm:text-sm text-gray-500">Rejected</div>
+            <div className="text-xl sm:text-2xl font-bold text-red-500">
               {stats.rejected}
             </div>
           </div>
         </div>
 
         {/* Filter and Search Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Complaints Management
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 sm:mb-6 gap-3">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+            Complaints
           </h2>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search complaints..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Search..."
+                className="pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            <button
-              className="btn btn-sm btn-outline border-gray-300 hover:bg-gray-50 hover:text-gray-800"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <SlidersHorizontal className="w-4 h-4 mr-1" />
-              Filters
-            </button>
-
-            {hasFilters && (
+            <div className="flex gap-2">
               <button
                 className="btn btn-sm btn-outline border-gray-300 hover:bg-gray-50 hover:text-gray-800"
-                onClick={clearAllFilters}
+                onClick={() => setShowFilters(!showFilters)}
               >
-                <X className="w-4 h-4 mr-1" />
-                Clear All
+                <SlidersHorizontal className="w-4 h-4" />
+                <span className="hidden sm:inline">Filters</span>
               </button>
-            )}
+
+              {hasFilters && (
+                <button
+                  className="btn btn-sm btn-outline border-gray-300 hover:bg-gray-50 hover:text-gray-800"
+                  onClick={clearAllFilters}
+                >
+                  <X className="w-4 h-4" />
+                  <span className="hidden sm:inline">Clear</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Filter Drawer */}
         {showFilters && (
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 sm:mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Status
                 </label>
                 <select
-                  className="select select-bordered w-full"
+                  className="select select-bordered select-sm sm:select-md w-full"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
@@ -290,7 +286,7 @@ const AdminDashboard = () => {
                   Urgency
                 </label>
                 <select
-                  className="select select-bordered w-full"
+                  className="select select-bordered select-sm sm:select-md w-full"
                   value={urgencyFilter}
                   onChange={(e) => setUrgencyFilter(e.target.value)}
                 >
@@ -311,11 +307,11 @@ const AdminDashboard = () => {
           </div>
         ) : filteredComplaints.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-gray-500 text-lg">
-              No complaints found matching your criteria
+            <div className="text-gray-500 text-sm sm:text-lg">
+              No complaints found
             </div>
             <button
-              className="btn btn-outline mt-4 gap-2"
+              className="btn btn-outline btn-sm sm:btn-md mt-4 gap-2"
               onClick={clearAllFilters}
             >
               <Filter className="w-4 h-4" />
@@ -325,58 +321,49 @@ const AdminDashboard = () => {
         ) : (
           <>
             <div className="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-200">
-              <div className="overflow-x-auto px-2">
+              <div className="overflow-x-auto">
                 <table className="table w-full">
                   <thead className="bg-gray-50">
                     <tr className="text-gray-600">
-                      <th className="font-medium">
+                      <th className="font-medium p-2 sm:p-4">
                         <button
-                          className="flex items-center gap-1 hover:text-gray-800"
+                          className="flex items-center gap-1 hover:text-gray-800 text-xs sm:text-sm"
                           onClick={() => requestSort("title")}
                         >
                           Title
                           <ArrowUpDown className="w-3 h-3" />
                         </button>
                       </th>
-                      <th className="font-medium">
+                      <th className="font-medium p-2 sm:p-4 hidden sm:table-cell">
                         <button
-                          className="flex items-center gap-1 hover:text-gray-800"
+                          className="flex items-center gap-1 hover:text-gray-800 text-xs sm:text-sm"
                           onClick={() => requestSort("urgency")}
                         >
                           Urgency
                           <ArrowUpDown className="w-3 h-3" />
-                          {sortConfig.key === "urgency" && (
-                            <span className="text-xs">
-                              {sortConfig.direction === "asc" ? "↑" : "↓"}
-                            </span>
-                          )}
                         </button>
                       </th>
-                      <th className="font-medium">
+                      <th className="font-medium p-2 sm:p-4">
                         <button
-                          className="flex items-center gap-1 hover:text-gray-800"
+                          className="flex items-center gap-1 hover:text-gray-800 text-xs sm:text-sm"
                           onClick={() => requestSort("status")}
                         >
                           Status
                           <ArrowUpDown className="w-3 h-3" />
                         </button>
                       </th>
-                      <th className="font-medium">
+                      <th className="font-medium p-2 sm:p-4 hidden sm:table-cell">
                         <button
-                          className="flex items-center gap-1 hover:text-gray-800"
+                          className="flex items-center gap-1 hover:text-gray-800 text-xs sm:text-sm"
                           onClick={() => requestSort("createdAt")}
                         >
                           Date
                           <ArrowUpDown className="w-3 h-3" />
-                          {sortConfig.key === "createdAt" && (
-                            <span className="text-xs">
-                              {sortConfig.direction === "asc" ? "↑" : "↓"}
-                            </span>
-                          )}
                         </button>
                       </th>
-                      <th className="font-medium">Submitted By</th>
-                      <th className="font-medium text-right pr-4">Actions</th>
+                      <th className="font-medium p-2 sm:p-4 text-right">
+                        <span className="text-xs sm:text-sm">Actions</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -390,17 +377,19 @@ const AdminDashboard = () => {
                         }`}
                         onClick={() => setSelectedComplaint(c)}
                       >
-                        <td>
-                          <div className="font-medium text-gray-800">
-                            {c.title}
+                        <td className="p-2 sm:p-4">
+                          <div className="font-medium text-gray-800 text-xs sm:text-sm">
+                            {c.title.length > 30
+                              ? `${c.title.substring(0, 30)}...`
+                              : c.title}
                           </div>
-                          <div className="text-sm text-gray-500 line-clamp-1">
+                          <div className="text-gray-500 text-xs line-clamp-1 hidden sm:block">
                             {c.description}
                           </div>
                         </td>
-                        <td>
+                        <td className="p-2 sm:p-4 hidden sm:table-cell">
                           <span
-                            className={`badge ${
+                            className={`badge badge-sm ${
                               c.urgency === "High"
                                 ? "badge-error"
                                 : c.urgency === "Medium"
@@ -411,28 +400,28 @@ const AdminDashboard = () => {
                             {c.urgency}
                           </span>
                         </td>
-                        <td>{getStatusBadge(c.status)}</td>
-                        <td>
-                          {new Date(c.createdAt).toLocaleDateString("en-IN", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })}
+                        <td className="p-2 sm:p-4">
+                          {getStatusBadge(c.status)}
                         </td>
-                        <td>
-                          {c.anonymous
-                            ? "Anonymous"
-                            : c.user?.name || "Unknown"}
+                        <td className="p-2 sm:p-4 hidden sm:table-cell">
+                          <span className="text-xs sm:text-sm">
+                            {new Date(c.createdAt).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
                         </td>
-                        <td className="text-right pr-4">
+                        <td className="p-2 sm:p-4 text-right">
                           <button
-                            className="btn btn-ghost btn-sm hover:bg-gray-100"
+                            className="btn btn-ghost btn-xs sm:btn-sm hover:bg-gray-100"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedComplaint(c);
                             }}
                           >
-                            View
+                            <span className="hidden sm:inline">View</span>
+                            <span className="sm:hidden">...</span>
                           </button>
                         </td>
                       </tr>
@@ -442,9 +431,9 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Pagination */}
+            {/* Pagination - Mobile Friendly */}
             {totalPages > 1 && (
-              <div className="flex justify-center mt-6">
+              <div className="flex justify-center mt-4 sm:mt-6">
                 <div className="join">
                   <button
                     className="join-item btn btn-sm"
@@ -455,19 +444,9 @@ const AdminDashboard = () => {
                   >
                     «
                   </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        className={`join-item btn btn-sm ${
-                          currentPage === page ? "btn-active" : ""
-                        }`}
-                        onClick={() => setCurrentPage(page)}
-                      >
-                        {page}
-                      </button>
-                    )
-                  )}
+                  <button className="join-item btn btn-sm">
+                    Page {currentPage} of {totalPages}
+                  </button>
                   <button
                     className="join-item btn btn-sm"
                     onClick={() =>
@@ -530,23 +509,23 @@ const AdminDashboard = () => {
             </div>
 
             <div className="overflow-y-auto flex-1 p-4 sm:p-6">
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4 sm:gap-6">
                 {/* Description Section */}
                 <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                  <h4 className="font-semibold text-lg text-gray-800 mb-3">
+                  <h4 className="font-semibold text-lg text-gray-800 mb-2 sm:mb-3">
                     Description
                   </h4>
-                  <div className="prose max-w-none text-gray-700">
+                  <div className="prose max-w-none text-gray-700 text-sm sm:text-base">
                     {selectedComplaint.description}
                   </div>
                 </div>
 
                 {/* Metadata Cards - Stacked on mobile */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                     <div className="flex items-center gap-2 text-gray-500 mb-1">
                       <Clock className="w-4 h-4" />
-                      <span className="text-sm">Submitted</span>
+                      <span className="text-xs sm:text-sm">Submitted</span>
                     </div>
                     <p className="font-medium text-sm sm:text-base">
                       {new Date(selectedComplaint.createdAt).toLocaleString(
@@ -558,7 +537,7 @@ const AdminDashboard = () => {
                   <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                     <div className="flex items-center gap-2 text-gray-500 mb-1">
                       <MapPin className="w-4 h-4" />
-                      <span className="text-sm">Location</span>
+                      <span className="text-xs sm:text-sm">Location</span>
                     </div>
                     <p className="font-medium text-sm sm:text-base">
                       {selectedComplaint.location || "Not specified"}
@@ -568,7 +547,7 @@ const AdminDashboard = () => {
                   <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                     <div className="flex items-center gap-2 text-gray-500 mb-1">
                       <User className="w-4 h-4" />
-                      <span className="text-sm">Submitted By</span>
+                      <span className="text-xs sm:text-sm">Submitted By</span>
                     </div>
                     <p className="font-medium text-sm sm:text-base">
                       {selectedComplaint.anonymous
@@ -580,9 +559,9 @@ const AdminDashboard = () => {
                   <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                     <div className="flex items-center gap-2 text-gray-500 mb-1">
                       <Hash className="w-4 h-4" />
-                      <span className="text-sm">Complaint ID</span>
+                      <span className="text-xs sm:text-sm">Complaint ID</span>
                     </div>
-                    <p className="font-mono text-sm">
+                    <p className="font-mono text-xs sm:text-sm">
                       {selectedComplaint._id.slice(-8)}
                     </p>
                   </div>
@@ -590,7 +569,7 @@ const AdminDashboard = () => {
 
                 {/* Evidence Section */}
                 <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                  <h4 className="font-semibold text-lg text-gray-800 mb-3 flex items-center gap-2">
+                  <h4 className="font-semibold text-lg text-gray-800 mb-2 sm:mb-3 flex items-center gap-2">
                     <ImageIcon className="w-5 h-5" />
                     Evidence
                   </h4>
@@ -624,11 +603,11 @@ const AdminDashboard = () => {
 
             {/* Action Buttons - Stacked on mobile */}
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 z-10">
-              <div className="flex flex-col sm:flex-row justify-end gap-3">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
                 {selectedComplaint.status === "Pending" && (
                   <>
                     <button
-                      className="btn btn-success sm:btn-wide"
+                      className="btn btn-success btn-sm sm:btn-md sm:btn-wide"
                       onClick={() =>
                         handleStatusUpdate(selectedComplaint._id, "resolve")
                       }
@@ -637,11 +616,13 @@ const AdminDashboard = () => {
                       {statusUpdateLoading === "resolve" ? (
                         <>
                           <span className="loading loading-spinner"></span>
-                          Processing...
+                          <span className="hidden sm:inline">
+                            Processing...
+                          </span>
                         </>
                       ) : (
                         <>
-                          <CheckCircle2 className="w-5 h-5 mr-2" />
+                          <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5 mr-1 sm:mr-2" />
                           <span className="hidden sm:inline">
                             Mark as Resolved
                           </span>
@@ -650,7 +631,7 @@ const AdminDashboard = () => {
                       )}
                     </button>
                     <button
-                      className="btn btn-error sm:btn-wide"
+                      className="btn btn-error btn-sm sm:btn-md sm:btn-wide"
                       onClick={() =>
                         handleStatusUpdate(selectedComplaint._id, "reject")
                       }
@@ -659,11 +640,13 @@ const AdminDashboard = () => {
                       {statusUpdateLoading === "reject" ? (
                         <>
                           <span className="loading loading-spinner"></span>
-                          Processing...
+                          <span className="hidden sm:inline">
+                            Processing...
+                          </span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="w-5 h-5 mr-2" />
+                          <XCircle className="w-4 sm:w-5 h-4 sm:h-5 mr-1 sm:mr-2" />
                           <span className="hidden sm:inline">
                             Reject Complaint
                           </span>
@@ -674,7 +657,7 @@ const AdminDashboard = () => {
                   </>
                 )}
                 <button
-                  className="btn btn-ghost"
+                  className="btn btn-ghost btn-sm sm:btn-md"
                   onClick={() => setSelectedComplaint(null)}
                   disabled={statusUpdateLoading !== null}
                 >

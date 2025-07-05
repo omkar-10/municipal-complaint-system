@@ -9,11 +9,12 @@ import {
   Clock,
   Plus,
   Loader2,
+  Filter,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../utils/axiosInstance.js";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const CitizenDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -27,7 +28,7 @@ const CitizenDashboard = () => {
     image: null,
   });
   const [filterStatus, setFilterStatus] = useState("All");
-  const [isSaving, setIsSaving] = useState(false); // for spinner
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -159,24 +160,71 @@ const CitizenDashboard = () => {
 
           {loading ? (
             <div className="text-center py-10 text-gray-500">
-              Loading complaints...
+              <Loader2 className="mx-auto h-8 w-8 animate-spin mb-3" />
+              Loading your complaints...
             </div>
           ) : filteredComplaints.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 text-center">
+            <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 text-center max-w-md mx-auto">
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-blue-50 rounded-full">
+                  <AlertCircle
+                    className="w-12 h-12 text-blue-400"
+                    strokeWidth={1.5}
+                  />
+                </div>
+              </div>
               <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-2">
-                No complaints found
+                {complaints.length === 0 ? (
+                  <>No Issues Reported Yet</>
+                ) : (
+                  <>No Matching Complaints Found</>
+                )}
               </h3>
-              <p className="text-gray-500 mb-4 text-sm md:text-base">
+              <p className="text-gray-500 mb-6 text-sm md:text-base">
                 {complaints.length === 0
-                  ? "Report an issue to get started"
-                  : "Try selecting a different filter"}
+                  ? "You haven't reported any issues yet. Be the first to make your community better!"
+                  : "Try adjusting your filters to see different complaints"}
               </p>
-              <Link
-                to="/citizen/complaints/new"
-                className="btn btn-primary hidden sm:inline-flex"
-              >
-                Report New Issue
-              </Link>
+              <div className="space-y-3">
+                <Link
+                  to="/citizen/complaints/new"
+                  className="btn btn-primary btn-block gap-2"
+                >
+                  <Plus size={18} />
+                  Report New Issue
+                </Link>
+                {complaints.length > 0 && (
+                  <button
+                    onClick={() => setFilterStatus("All")}
+                    className="btn btn-ghost btn-block gap-2"
+                  >
+                    <Filter size={18} />
+                    Show All Complaints
+                  </button>
+                )}
+              </div>
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <div className="flex justify-center gap-4">
+                  <div className="text-center">
+                    <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <MapPin className="w-5 h-5 text-green-500" />
+                    </div>
+                    <p className="text-xs text-gray-500">Pinpoint location</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <Clock className="w-5 h-5 text-blue-500" />
+                    </div>
+                    <p className="text-xs text-gray-500">Track progress</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <AlertTriangle className="w-5 h-5 text-purple-500" />
+                    </div>
+                    <p className="text-xs text-gray-500">Set urgency</p>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -288,7 +336,7 @@ const CitizenDashboard = () => {
           </Link>
         </div>
 
-        {/* ✅ Edit Modal */}
+        {/* Edit Modal */}
         {editingComplaint && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
             <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative">
