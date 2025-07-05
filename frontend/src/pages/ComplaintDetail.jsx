@@ -104,7 +104,7 @@ const ComplaintDetail = () => {
             {complaint.imageUrl && (
               <div className="relative h-80 w-full overflow-hidden">
                 <img
-                  src={`http://localhost:5001${complaint.imageUrl}`}
+                  src={complaint.imageUrl}
                   alt="Complaint"
                   className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
                 />
