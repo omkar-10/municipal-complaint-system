@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"; // ✅ Correct import
 import api from "../utils/axiosInstance.js";
-import { Link } from "react-router";
+import { Link } from "react-router"; // ✅ Correct import
 import toast from "react-hot-toast";
 import { Lock, Mail, LogIn } from "lucide-react";
 
@@ -10,8 +10,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  // Adjust the path based on your folder structure
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -66,6 +64,7 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email Field */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text flex items-center gap-2">
@@ -87,6 +86,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Password Field */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text flex items-center gap-2">
@@ -106,13 +106,9 @@ const Login = () => {
                 />
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               </div>
-              <label className="label">
-                {/* <span className="label-text-alt link link-hover">
-                  Forgot password?
-                </span> */}
-              </label>
             </div>
 
+            {/* Login Button */}
             <div className="form-control mt-8">
               <button
                 className={`btn btn-primary w-full ${
@@ -152,70 +148,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// import { useState } from "react";
-// import { useNavigate } from "react-router";
-// import toast from "react-hot-toast";
-
-// function Login() {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const res = await fetch("http://localhost:5001/api/users/login", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ email, password }),
-//       });
-
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.message);
-
-//       localStorage.setItem("userInfo", JSON.stringify(data));
-//       toast.success("Login successful!");
-
-//       // Redirect based on role
-//       if (data.role === "admin") {
-//         navigate("/admin/dashboard");
-//       } else {
-//         navigate("/citizen/dashboard");
-//       }
-//     } catch (err) {
-//       toast.error(err.message || "Login failed");
-//     }
-//   };
-
-//   return (
-//     <div className="flex justify-center items-center min-h-screen bg-base-200">
-//       <form
-//         onSubmit={handleLogin}
-//         className="bg-white p-8 rounded shadow w-full max-w-sm"
-//       >
-//         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           className="input input-bordered w-full mb-4"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//           required
-//         />
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           className="input input-bordered w-full mb-4"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//           required
-//         />
-//         <button className="btn btn-primary w-full">Login</button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default Login;

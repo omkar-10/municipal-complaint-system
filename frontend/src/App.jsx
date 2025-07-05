@@ -1,32 +1,25 @@
-import { Routes, Route } from "react-router";
-import Login from "../src/pages/Login";
-import Register from "../src/pages/Register";
+import { Routes, Route, Navigate, useNavigate } from "react-router";
+import HeroSection from "./pages/HeroSection";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Contact from "./pages/Contact";
 import CitizenDashboard from "./pages/CitizenDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NewComplaint from "./pages/NewComplaint";
 import ComplaintDetail from "./pages/ComplaintDetail";
-import { Navigate } from "react-router";
 import PrivateRoute from "./components/PrivateRoute";
-import HeroSection from "./pages/HeroSection";
-import Contact from "./pages/Contact";
 
 function App() {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          localStorage.getItem("userInfo") ? (
-            <Navigate to="/citizen/dashboard" />
-          ) : (
-            <HeroSection />
-          )
-        }
-      />
-
+      {/* Public Routes */}
+      <Route path="/" element={<HeroSection />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/contact" element={<Contact />} />
+
       {/* Protected Routes */}
       <Route
         path="/citizen/dashboard"
@@ -46,7 +39,9 @@ function App() {
       />
       <Route path="/citizen/complaints/new" element={<NewComplaint />} />
       <Route path="/citizen/complaints/:id" element={<ComplaintDetail />} />
-      <Route path="/" element={<HeroSection />} />
+
+      {/* Catch-all for invalid routes */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }

@@ -39,20 +39,25 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Check if the user exists
     const user = await User.findOne({ email });
 
+    // Check password
     if (!user || !(await user.matchPassword(password))) {
+      console.warn("❌ Invalid login attempt for email:", email);
       return res.status(401).json({ message: "Invalid credentials" });
     }
+
+    // Success
     res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user),
+      token: generateToken(user._id), // ✅ Pass user._id instead of full user
     });
   } catch (error) {
-    console.error("Error in the loginUser controller");
-    res.status(500).json({ message: "Server Error" });
+    console.error("❌ Error in the loginUser controller:", error.message);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
