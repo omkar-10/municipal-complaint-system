@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { User, Mail, Lock, UserPlus } from "lucide-react";
-import api from "../utils/axiosInstance"; // ✅ Use axios instance
+import api from "../utils/axiosInstance.js"; // ✅ Use axios instance
 
 const Register = () => {
   const [name, setName] = useState("");
