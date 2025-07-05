@@ -8,12 +8,4 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "municipal_complaints",
-    allowed_formats: ["jpg", "png", "jpeg"],
-  },
-});
-
-export { cloudinary, storage };
+export default cloudinary;

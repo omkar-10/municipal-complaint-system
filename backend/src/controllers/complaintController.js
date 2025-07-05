@@ -2,6 +2,7 @@ import Complaint from "../models/Complain.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import User from "../models/User.js";
 import cloudinary from "../utils/cloudinary.js";
+import { bufferToDataURI } from "../utils/dataUri.js";
 
 // Helper function to upload image buffer to Cloudinary
 const uploadToCloudinary = async (fileBuffer) => {
@@ -40,9 +41,16 @@ export const createComplaint = async (req, res) => {
     const isAnonymous = anonymous === "true" || anonymous === true;
 
     let imageUrl = "";
+
     if (req.file) {
-      const uploadedImage = await uploadToCloudinary(req.file.buffer);
-      imageUrl = uploadedImage;
+      const fileFormat = req.file.mimetype.split("/")[1];
+      const fileStr = bufferToDataURI(fileFormat, req.file.buffer);
+
+      const uploadResult = await cloudinary.uploader.upload(fileStr, {
+        folder: "municipal_complaints",
+      });
+
+      imageUrl = uploadResult.secure_url;
     }
 
     const complaint = new Complaint({
