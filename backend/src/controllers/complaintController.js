@@ -1,6 +1,7 @@
 import Complaint from "../models/Complain.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import User from "../models/User.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const getComplaintById = async (req, res) => {
   try {
@@ -24,9 +25,15 @@ export const getComplaintById = async (req, res) => {
 export const createComplaint = async (req, res) => {
   try {
     const { title, description, urgency, anonymous, location } = req.body;
-
-    const imageUrl = req.file?.path || "";
     const isAnonymous = anonymous === "true" || anonymous === true;
+
+    let imageUrl = "";
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "complaints",
+      });
+      imageUrl = result.secure_url;
+    }
 
     const complaint = new Complaint({
       title,
@@ -46,23 +53,23 @@ export const createComplaint = async (req, res) => {
       "Complaint Submitted – MBMC Helpdesk",
       `Hi ${user.name}, your complaint has been submitted.`,
       `
-  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-    <div style="text-align: center;">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
-    </div>
-    <h2 style="color: #2d7b9a; text-align: center;">Municipal Complaint Submission Confirmation</h2>
-    <p>Dear <strong>${user.name}</strong>,</p>
-    <p>Thank you for submitting your complaint to the <strong>Municipal Corporation</strong>. Below are the details of your submission:</p>
-    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
-      <tr><td style="padding: 8px; font-weight: bold;">Title:</td><td style="padding: 8px;">${title}</td></tr>
-      <tr><td style="padding: 8px; font-weight: bold;">Description:</td><td style="padding: 8px;">${description}</td></tr>
-      <tr><td style="padding: 8px; font-weight: bold;">Urgency:</td><td style="padding: 8px;">${urgency}</td></tr>
-      <tr><td style="padding: 8px; font-weight: bold;">Location:</td><td style="padding: 8px;">${location}</td></tr>
-    </table>
-    <p>Our team will review your complaint and take the necessary action as per the urgency level. You will be notified once the status is updated.</p>
-    <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>Municipal Helpdesk</strong><br/>Municipal Corporation</p>
-  </div>
-  `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+          <div style="text-align: center;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
+          </div>
+          <h2 style="color: #2d7b9a; text-align: center;">Municipal Complaint Submission Confirmation</h2>
+          <p>Dear <strong>${user.name}</strong>,</p>
+          <p>Thank you for submitting your complaint to the <strong>Municipal Corporation</strong>. Below are the details of your submission:</p>
+          <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <tr><td style="padding: 8px; font-weight: bold;">Title:</td><td style="padding: 8px;">${title}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Description:</td><td style="padding: 8px;">${description}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Urgency:</td><td style="padding: 8px;">${urgency}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Location:</td><td style="padding: 8px;">${location}</td></tr>
+          </table>
+          <p>Our team will review your complaint and take the necessary action as per the urgency level. You will be notified once the status is updated.</p>
+          <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>Municipal Helpdesk</strong><br/>Municipal Corporation</p>
+        </div>
+      `
     );
 
     await complaint.save();
@@ -129,7 +136,6 @@ export const updateComplaint = async (req, res) => {
 
     if (!complaint)
       return res.status(404).json({ message: "Complaint not found" });
-
     if (complaint.user.toString() !== req.user.id)
       return res.status(403).json({ message: "Not authorized" });
 
@@ -140,7 +146,10 @@ export const updateComplaint = async (req, res) => {
     complaint.anonymous = anonymous ?? complaint.anonymous;
 
     if (req.file) {
-      complaint.imageUrl = req.file?.path || complaint.imageUrl;
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "complaints",
+      });
+      complaint.imageUrl = result.secure_url;
     }
 
     await complaint.save();
@@ -168,17 +177,17 @@ export const markResolved = async (req, res) => {
       "Complaint Resolved – MBMC Helpdesk",
       `Hi ${complaint.user.name}, your complaint has been resolved.`,
       `
-  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-    <div style="text-align: center;">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
-    </div>
-    <h2 style="color: #2d7b9a; text-align: center;">Complaint Resolution Notification</h2>
-    <p>Dear <strong>${complaint.user.name}</strong>,</p>
-    <p>Your complaint titled <strong>${complaint.title}</strong> has been marked as <span style="color: green;">Resolved</span>.</p>
-    <p>We appreciate your input and encourage you to report any future concerns.</p>
-    <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>MBMC Helpdesk</strong><br/>Municipal Corporation</p>
-  </div>
-  `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+          <div style="text-align: center;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
+          </div>
+          <h2 style="color: #2d7b9a; text-align: center;">Complaint Resolution Notification</h2>
+          <p>Dear <strong>${complaint.user.name}</strong>,</p>
+          <p>Your complaint titled <strong>${complaint.title}</strong> has been marked as <span style="color: green;">Resolved</span>.</p>
+          <p>We appreciate your input and encourage you to report any future concerns.</p>
+          <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>MBMC Helpdesk</strong><br/>Municipal Corporation</p>
+        </div>
+      `
     );
 
     res.json({ message: "Complaint marked as resolved ✅" });
@@ -206,17 +215,17 @@ export const rejectComplaint = async (req, res) => {
         "Complaint Rejected – Municipal Helpdesk",
         `Hi ${complaint.user.name}, your complaint was rejected.`,
         `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-      <div style="text-align: center;">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
-      </div>
-      <h2 style="color: #2d7b9a; text-align: center;">Complaint Review Outcome</h2>
-      <p>Dear <strong>${complaint.user.name}</strong>,</p>
-      <p>Your complaint titled <strong>${complaint.title}</strong> has been <span style="color: red;">Rejected</span>.</p>
-      <p>If you believe this was an error, feel free to resubmit with more details.</p>
-      <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>MBMC Helpdesk</strong><br/>Municipal Corporation</p>
-    </div>
-    `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+            <div style="text-align: center;">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
+            </div>
+            <h2 style="color: #2d7b9a; text-align: center;">Complaint Review Outcome</h2>
+            <p>Dear <strong>${complaint.user.name}</strong>,</p>
+            <p>Your complaint titled <strong>${complaint.title}</strong> has been <span style="color: red;">Rejected</span>.</p>
+            <p>If you believe this was an error, feel free to resubmit with more details.</p>
+            <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>MBMC Helpdesk</strong><br/>Municipal Corporation</p>
+          </div>
+        `
       );
     }
 
