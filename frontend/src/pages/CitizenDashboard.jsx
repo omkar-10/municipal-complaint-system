@@ -150,20 +150,12 @@ const CitizenDashboard = () => {
             </div>
           </div>
 
-          {/* ✅ Loading state */}
           {loading ? (
             <div className="text-center py-10 text-gray-500">
               Loading complaints...
             </div>
           ) : filteredComplaints.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 text-center">
-              {complaints.length === 0 && (
-                <img
-                  src="/empty-state.svg"
-                  alt="No complaints"
-                  className="mx-auto h-32 md:h-40 mb-4"
-                />
-              )}
               <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-2">
                 No complaints found
               </h3>
@@ -289,8 +281,7 @@ const CitizenDashboard = () => {
           </Link>
         </div>
 
-        {/* Keep your edit modal here unchanged */}
-        {/* ...modal code remains same... */}
+        {/* Edit modal remains unchanged — include if needed */}
       </div>
     </>
   );

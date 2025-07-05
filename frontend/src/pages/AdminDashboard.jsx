@@ -484,19 +484,19 @@ const AdminDashboard = () => {
         )}
       </div>
 
-      {/* Complaint Detail Modal */}
+      {/* Complaint Detail Modal - Mobile Friendly */}
       {selectedComplaint && (
         <div className="modal modal-open z-[100] backdrop-blur-sm">
-          <div className="modal-box max-w-5xl p-0 overflow-hidden max-h-[90vh] flex flex-col">
-            <div className="bg-slate-800 p-6 text-white sticky top-0 z-10">
+          <div className="modal-box p-0 overflow-hidden w-full h-full max-h-screen rounded-none sm:rounded-lg sm:max-w-5xl sm:h-auto sm:max-h-[90vh] flex flex-col">
+            <div className="bg-slate-800 p-4 text-white sticky top-0 z-10">
               <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-2xl font-bold line-clamp-1">
+                <div className="w-full">
+                  <h3 className="text-xl sm:text-2xl font-bold line-clamp-2">
                     {selectedComplaint.title}
                   </h3>
-                  <div className="flex gap-2 mt-3">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     <div
-                      className={`px-2.5 py-0.5 rounded-md text-xs font-medium ${
+                      className={`px-2 py-0.5 rounded-md text-xs font-medium ${
                         selectedComplaint.urgency === "High"
                           ? "bg-red-500"
                           : selectedComplaint.urgency === "Medium"
@@ -508,7 +508,7 @@ const AdminDashboard = () => {
                     </div>
 
                     <div
-                      className={`px-2.5 py-0.5 rounded-md text-xs font-medium ${
+                      className={`px-2 py-0.5 rounded-md text-xs font-medium ${
                         selectedComplaint.status === "Resolved"
                           ? "bg-green-500"
                           : selectedComplaint.status === "Rejected"
@@ -521,7 +521,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
                 <button
-                  className="btn btn-sm btn-circle btn-ghost text-white hover:bg-white/10"
+                  className="btn btn-sm btn-circle btn-ghost text-white hover:bg-white/10 ml-2"
                   onClick={() => setSelectedComplaint(null)}
                 >
                   ✕
@@ -529,106 +529,106 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="overflow-y-auto flex-1 p-6">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                    <h4 className="font-semibold text-lg text-gray-800 mb-3">
-                      Description
-                    </h4>
-                    <div className="prose max-w-none text-gray-700">
-                      {selectedComplaint.description}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-sm">Submitted</span>
-                      </div>
-                      <p className="font-medium">
-                        {new Date(selectedComplaint.createdAt).toLocaleString(
-                          "en-IN"
-                        )}
-                      </p>
-                    </div>
-
-                    <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <MapPin className="w-4 h-4" />
-                        <span className="text-sm">Location</span>
-                      </div>
-                      <p className="font-medium">
-                        {selectedComplaint.location || "Not specified"}
-                      </p>
-                    </div>
-
-                    <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <User className="w-4 h-4" />
-                        <span className="text-sm">Submitted By</span>
-                      </div>
-                      <p className="font-medium">
-                        {selectedComplaint.anonymous
-                          ? "Anonymous"
-                          : selectedComplaint.user?.name || "Unknown"}
-                      </p>
-                    </div>
-
-                    <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <Hash className="w-4 h-4" />
-                        <span className="text-sm">Complaint ID</span>
-                      </div>
-                      <p className="font-mono text-sm">
-                        {selectedComplaint._id.slice(-8)}
-                      </p>
-                    </div>
+            <div className="overflow-y-auto flex-1 p-4 sm:p-6">
+              <div className="flex flex-col gap-6">
+                {/* Description Section */}
+                <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                  <h4 className="font-semibold text-lg text-gray-800 mb-3">
+                    Description
+                  </h4>
+                  <div className="prose max-w-none text-gray-700">
+                    {selectedComplaint.description}
                   </div>
                 </div>
 
-                <div>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                    <h4 className="font-semibold text-lg text-gray-800 mb-3 flex items-center gap-2">
-                      <ImageIcon className="w-5 h-5" />
-                      Evidence
-                    </h4>
-                    {selectedComplaint.imageUrl ? (
-                      <div className="relative group">
-                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                          <a
-                            href={selectedComplaint.imageUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-sm btn-ghost text-white"
-                          >
-                            View Full Image
-                          </a>
-                        </div>
-                        <img
-                          src={selectedComplaint.imageUrl}
-                          alt="Complaint evidence"
-                          className="w-full h-64 object-cover rounded-lg"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-64 bg-gray-100 rounded-lg text-gray-500 gap-2">
-                        <ImageIcon className="w-10 h-10" />
-                        <p>No image provided</p>
-                      </div>
-                    )}
+                {/* Metadata Cards - Stacked on mobile */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-2 text-gray-500 mb-1">
+                      <Clock className="w-4 h-4" />
+                      <span className="text-sm">Submitted</span>
+                    </div>
+                    <p className="font-medium text-sm sm:text-base">
+                      {new Date(selectedComplaint.createdAt).toLocaleString(
+                        "en-IN"
+                      )}
+                    </p>
                   </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-2 text-gray-500 mb-1">
+                      <MapPin className="w-4 h-4" />
+                      <span className="text-sm">Location</span>
+                    </div>
+                    <p className="font-medium text-sm sm:text-base">
+                      {selectedComplaint.location || "Not specified"}
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-2 text-gray-500 mb-1">
+                      <User className="w-4 h-4" />
+                      <span className="text-sm">Submitted By</span>
+                    </div>
+                    <p className="font-medium text-sm sm:text-base">
+                      {selectedComplaint.anonymous
+                        ? "Anonymous"
+                        : selectedComplaint.user?.name || "Unknown"}
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-2 text-gray-500 mb-1">
+                      <Hash className="w-4 h-4" />
+                      <span className="text-sm">Complaint ID</span>
+                    </div>
+                    <p className="font-mono text-sm">
+                      {selectedComplaint._id.slice(-8)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Evidence Section */}
+                <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                  <h4 className="font-semibold text-lg text-gray-800 mb-3 flex items-center gap-2">
+                    <ImageIcon className="w-5 h-5" />
+                    Evidence
+                  </h4>
+                  {selectedComplaint.imageUrl ? (
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                        <a
+                          href={selectedComplaint.imageUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-ghost text-white"
+                        >
+                          View Full Image
+                        </a>
+                      </div>
+                      <img
+                        src={selectedComplaint.imageUrl}
+                        alt="Complaint evidence"
+                        className="w-full h-48 sm:h-64 object-cover rounded-lg"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-48 sm:h-64 bg-gray-100 rounded-lg text-gray-500 gap-2">
+                      <ImageIcon className="w-10 h-10" />
+                      <p>No image provided</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
+            {/* Action Buttons - Stacked on mobile */}
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 z-10">
-              <div className="flex justify-end gap-3">
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
                 {selectedComplaint.status === "Pending" && (
                   <>
                     <button
-                      className="btn btn-success btn-wide"
+                      className="btn btn-success sm:btn-wide"
                       onClick={() =>
                         handleStatusUpdate(selectedComplaint._id, "resolve")
                       }
@@ -642,12 +642,15 @@ const AdminDashboard = () => {
                       ) : (
                         <>
                           <CheckCircle2 className="w-5 h-5 mr-2" />
-                          Mark as Resolved
+                          <span className="hidden sm:inline">
+                            Mark as Resolved
+                          </span>
+                          <span className="sm:hidden">Resolve</span>
                         </>
                       )}
                     </button>
                     <button
-                      className="btn btn-error btn-wide"
+                      className="btn btn-error sm:btn-wide"
                       onClick={() =>
                         handleStatusUpdate(selectedComplaint._id, "reject")
                       }
@@ -661,7 +664,10 @@ const AdminDashboard = () => {
                       ) : (
                         <>
                           <XCircle className="w-5 h-5 mr-2" />
-                          Reject Complaint
+                          <span className="hidden sm:inline">
+                            Reject Complaint
+                          </span>
+                          <span className="sm:hidden">Reject</span>
                         </>
                       )}
                     </button>
