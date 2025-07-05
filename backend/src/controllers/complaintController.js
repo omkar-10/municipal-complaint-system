@@ -3,6 +3,18 @@ import { sendEmail } from "../utils/sendEmail.js";
 import User from "../models/User.js";
 import cloudinary from "../utils/cloudinary.js";
 
+// Helper function to upload image buffer to Cloudinary
+const uploadToCloudinary = async (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream({ folder: "complaints" }, (err, result) => {
+        if (err) return reject(err);
+        resolve(result.secure_url);
+      })
+      .end(fileBuffer);
+  });
+};
+
 export const getComplaintById = async (req, res) => {
   try {
     const complaint = await Complaint.findById(req.params.id);
@@ -29,10 +41,8 @@ export const createComplaint = async (req, res) => {
 
     let imageUrl = "";
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "complaints",
-      });
-      imageUrl = result.secure_url;
+      const uploadedImage = await uploadToCloudinary(req.file.buffer);
+      imageUrl = uploadedImage;
     }
 
     const complaint = new Complaint({
@@ -146,10 +156,8 @@ export const updateComplaint = async (req, res) => {
     complaint.anonymous = anonymous ?? complaint.anonymous;
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "complaints",
-      });
-      complaint.imageUrl = result.secure_url;
+      const uploadedImage = await uploadToCloudinary(req.file.buffer);
+      complaint.imageUrl = uploadedImage;
     }
 
     await complaint.save();
