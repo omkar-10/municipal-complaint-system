@@ -14,7 +14,7 @@ import {
 import toast from "react-hot-toast";
 import api from "../utils/axiosInstance.js";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const CitizenDashboard = () => {
   const [complaints, setComplaints] = useState([]);
