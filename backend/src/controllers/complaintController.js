@@ -68,26 +68,60 @@ export const createComplaint = async (req, res) => {
 
     await sendEmail(
       user.email,
-      "Complaint Submitted – MBMC Helpdesk",
-      `Hi ${user.name}, your complaint has been submitted.`,
+      "Complaint Submitted – Municipal Helpdesk",
+      `Dear ${user.name}, your complaint has been successfully submitted.`,
       `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-          <div style="text-align: center;">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
-          </div>
-          <h2 style="color: #2d7b9a; text-align: center;">Municipal Complaint Submission Confirmation</h2>
-          <p>Dear <strong>${user.name}</strong>,</p>
-          <p>Thank you for submitting your complaint to the <strong>Municipal Corporation</strong>. Below are the details of your submission:</p>
-          <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
-            <tr><td style="padding: 8px; font-weight: bold;">Title:</td><td style="padding: 8px;">${title}</td></tr>
-            <tr><td style="padding: 8px; font-weight: bold;">Description:</td><td style="padding: 8px;">${description}</td></tr>
-            <tr><td style="padding: 8px; font-weight: bold;">Urgency:</td><td style="padding: 8px;">${urgency}</td></tr>
-            <tr><td style="padding: 8px; font-weight: bold;">Location:</td><td style="padding: 8px;">${location}</td></tr>
-          </table>
-          <p>Our team will review your complaint and take the necessary action as per the urgency level. You will be notified once the status is updated.</p>
-          <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>Municipal Helpdesk</strong><br/>Municipal Corporation</p>
-        </div>
-      `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 24px; border-radius: 8px; background-color: #f9f9f9;">
+      <div style="text-align: center;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="Municipal Logo" width="80" style="margin-bottom: 16px;" />
+      </div>
+
+      <h2 style="color: #1e3a8a; text-align: center; font-size: 22px; margin-bottom: 20px;">
+        Complaint Submission Confirmation
+      </h2>
+
+      <p style="font-size: 16px; color: #333;">To,<br/>
+      <strong>${user.name}</strong></p>
+
+      <p style="font-size: 15px; color: #333; line-height: 1.6;">
+        Thank you for raising your concern through the official Municipal Complaint System.
+        The following details have been recorded for your reference:
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px; font-weight: bold; background-color: #f1f5f9;">Title</td>
+          <td style="padding: 8px;">${title}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; font-weight: bold; background-color: #f1f5f9;">Description</td>
+          <td style="padding: 8px;">${description}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; font-weight: bold; background-color: #f1f5f9;">Urgency</td>
+          <td style="padding: 8px;">${urgency}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; font-weight: bold; background-color: #f1f5f9;">Location</td>
+          <td style="padding: 8px;">${location}</td>
+        </tr>
+      </table>
+
+      <p style="font-size: 15px; color: #333; line-height: 1.6;">
+        The concerned department will review your complaint and initiate necessary action based on the reported urgency. You will receive an update regarding the status in due course.
+      </p>
+
+      <p style="font-size: 14px; color: #555; margin-top: 30px;">
+        For queries or additional information, please feel free to reach out through the helpdesk portal.
+      </p>
+
+      <p style="font-size: 14px; color: #444; margin-top: 35px;">
+        Regards,<br/>
+        <strong>Municipal Helpdesk Team</strong><br/>
+        Municipal Corporation
+      </p>
+    </div>
+  `
     );
 
     await complaint.save();
@@ -190,20 +224,40 @@ export const markResolved = async (req, res) => {
 
     await sendEmail(
       complaint.user.email,
-      "Complaint Resolved – MBMC Helpdesk",
-      `Hi ${complaint.user.name}, your complaint has been resolved.`,
+      "Complaint Resolved – Municipal Helpdesk",
+      `Dear ${complaint.user.name}, your complaint has been resolved.`,
       `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-          <div style="text-align: center;">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
-          </div>
-          <h2 style="color: #2d7b9a; text-align: center;">Complaint Resolution Notification</h2>
-          <p>Dear <strong>${complaint.user.name}</strong>,</p>
-          <p>Your complaint titled <strong>${complaint.title}</strong> has been marked as <span style="color: green;">Resolved</span>.</p>
-          <p>We appreciate your input and encourage you to report any future concerns.</p>
-          <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>MBMC Helpdesk</strong><br/>Municipal Corporation</p>
-        </div>
-      `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 24px; border-radius: 8px; background-color: #f9f9f9;">
+      <div style="text-align: center;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="Municipal Logo" width="80" style="margin-bottom: 16px;" />
+      </div>
+
+      <h2 style="color: #1e3a8a; text-align: center; font-size: 22px; margin-bottom: 20px;">
+        Complaint Resolution Acknowledgement
+      </h2>
+
+      <p style="font-size: 16px; color: #333;">To,<br/>
+      <strong>${complaint.user.name}</strong></p>
+
+      <p style="font-size: 15px; color: #333; line-height: 1.6;">
+        We are pleased to inform you that your complaint titled <strong>"${complaint.title}"</strong> has been successfully reviewed and marked as <strong style="color: green;">Resolved</strong> by the municipal team.
+      </p>
+
+      <p style="font-size: 15px; color: #333; line-height: 1.6;">
+        Your cooperation is sincerely appreciated. Should you face any further issues or wish to raise another concern, we encourage you to do so through the municipal complaint system.
+      </p>
+
+      <p style="font-size: 14px; color: #555; line-height: 1.6; margin-top: 30px;">
+        For any clarification or support, you may contact the local helpdesk or reply to this communication.
+      </p>
+
+      <p style="font-size: 14px; color: #444; margin-top: 35px;">
+        Regards,<br/>
+        <strong>Municipal Helpdesk Team</strong><br/>
+        Municipal Corporation
+      </p>
+    </div>
+  `
     );
 
     res.json({ message: "Complaint marked as resolved ✅" });
@@ -228,20 +282,38 @@ export const rejectComplaint = async (req, res) => {
     if (complaint.user) {
       await sendEmail(
         complaint.user.email,
-        "Complaint Rejected – Municipal Helpdesk",
-        `Hi ${complaint.user.name}, your complaint was rejected.`,
+        "Municipal Helpdesk – Complaint Rejected Notification",
+        `Dear ${complaint.user.name}, your complaint has been reviewed and rejected.`,
         `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-            <div style="text-align: center;">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 15px;" />
-            </div>
-            <h2 style="color: #2d7b9a; text-align: center;">Complaint Review Outcome</h2>
-            <p>Dear <strong>${complaint.user.name}</strong>,</p>
-            <p>Your complaint titled <strong>${complaint.title}</strong> has been <span style="color: red;">Rejected</span>.</p>
-            <p>If you believe this was an error, feel free to resubmit with more details.</p>
-            <p style="margin-top: 30px; font-size: 14px; color: gray;">Regards,<br/><strong>MBMC Helpdesk</strong><br/>Municipal Corporation</p>
-          </div>
-        `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #d3d3d3; padding: 24px; border-radius: 8px; background-color: #f9f9f9;">
+    <div style="text-align: center;">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 16px;" />
+    </div>
+    <h2 style="color: #1e3a8a; text-align: center; font-size: 22px; margin-bottom: 20px;">Municipal Helpdesk Notification</h2>
+    <p style="font-size: 16px; color: #333;">To,<br/>
+    <strong>${complaint.user.name}</strong></p>
+
+    <p style="font-size: 16px; color: #333;">Subject: <strong>Status Update on Complaint – <em>${complaint.title}</em></strong></p>
+
+    <p style="font-size: 15px; color: #333; line-height: 1.6;">
+      We would like to inform you that your registered complaint with the title <strong>"${complaint.title}"</strong> has been reviewed by the concerned department and is marked as <strong style="color: #b91c1c;">Rejected</strong>.
+    </p>
+
+    <p style="font-size: 15px; color: #333; line-height: 1.6;">
+      This decision has been taken after due assessment and consideration. If you believe this status is inaccurate or if you have additional information to support your complaint, we encourage you to resubmit the complaint with necessary clarifications or documentation.
+    </p>
+
+    <p style="font-size: 14px; color: #555; line-height: 1.6; margin-top: 30px;">
+      For further queries or assistance, you may contact your local ward office or reply to this email.
+    </p>
+
+    <p style="font-size: 14px; color: #444; margin-top: 35px;">
+      Sincerely,<br/>
+      <strong>Municipal Helpdesk Team</strong><br/>
+      Municipal Corporation
+    </p>
+  </div>
+  `
       );
     }
 
