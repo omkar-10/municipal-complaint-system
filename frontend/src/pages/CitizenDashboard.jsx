@@ -8,6 +8,7 @@ import {
   MapPin,
   Clock,
   Plus,
+  Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../utils/axiosInstance.js";
@@ -23,8 +24,10 @@ const CitizenDashboard = () => {
     description: "",
     urgency: "Low",
     location: "",
+    image: null,
   });
   const [filterStatus, setFilterStatus] = useState("All");
+  const [isSaving, setIsSaving] = useState(false); // for spinner
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -71,11 +74,13 @@ const CitizenDashboard = () => {
       description: complaint.description,
       urgency: complaint.urgency,
       location: complaint.location,
+      image: null,
     });
   };
 
   const handleEditSave = async () => {
     try {
+      setIsSaving(true);
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
 
       const formData = new FormData();
@@ -106,6 +111,8 @@ const CitizenDashboard = () => {
     } catch (err) {
       console.log("Error in handleEditSave:", err);
       toast.error("Failed to update complaint");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -209,7 +216,7 @@ const CitizenDashboard = () => {
                               e.preventDefault();
                               if (isEditable) openEditModal(complaint);
                             }}
-                            className={`btn btn-xs sm:btn-sm btn-ghost ${
+                            className={`btn btn-xs sm:btn-sm btn-ghost text-blue-600 ${
                               !isEditable && "btn-disabled"
                             }`}
                             disabled={!isEditable}
@@ -281,7 +288,7 @@ const CitizenDashboard = () => {
           </Link>
         </div>
 
-        {/* Edit modal remains unchanged — include if needed */}
+        {/* ✅ Edit Modal */}
         {editingComplaint && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
             <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative">
@@ -331,13 +338,15 @@ const CitizenDashboard = () => {
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
                 </select>
-
                 <input
                   type="file"
                   className="file-input file-input-bordered w-full"
                   accept="image/*"
                   onChange={(e) =>
-                    setEditedData({ ...editedData, image: e.target.files[0] })
+                    setEditedData({
+                      ...editedData,
+                      image: e.target.files[0],
+                    })
                   }
                 />
               </div>
@@ -349,7 +358,12 @@ const CitizenDashboard = () => {
                 >
                   Cancel
                 </button>
-                <button onClick={handleEditSave} className="btn btn-primary">
+                <button
+                  onClick={handleEditSave}
+                  className="btn btn-primary flex items-center gap-2"
+                  disabled={isSaving}
+                >
+                  {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
                   Save Changes
                 </button>
               </div>
