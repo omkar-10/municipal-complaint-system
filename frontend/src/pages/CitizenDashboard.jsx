@@ -282,6 +282,80 @@ const CitizenDashboard = () => {
         </div>
 
         {/* Edit modal remains unchanged — include if needed */}
+        {editingComplaint && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
+            <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Edit Complaint
+              </h3>
+
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Title"
+                  className="input input-bordered w-full"
+                  value={editedData.title}
+                  onChange={(e) =>
+                    setEditedData({ ...editedData, title: e.target.value })
+                  }
+                />
+                <textarea
+                  placeholder="Description"
+                  className="textarea textarea-bordered w-full"
+                  rows={3}
+                  value={editedData.description}
+                  onChange={(e) =>
+                    setEditedData({
+                      ...editedData,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Location"
+                  className="input input-bordered w-full"
+                  value={editedData.location}
+                  onChange={(e) =>
+                    setEditedData({ ...editedData, location: e.target.value })
+                  }
+                />
+                <select
+                  className="select select-bordered w-full"
+                  value={editedData.urgency}
+                  onChange={(e) =>
+                    setEditedData({ ...editedData, urgency: e.target.value })
+                  }
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+
+                <input
+                  type="file"
+                  className="file-input file-input-bordered w-full"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setEditedData({ ...editedData, image: e.target.files[0] })
+                  }
+                />
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setEditingComplaint(null)}
+                  className="btn btn-outline"
+                >
+                  Cancel
+                </button>
+                <button onClick={handleEditSave} className="btn btn-primary">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
