@@ -87,7 +87,10 @@ export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
 
-    const emailToken = await EmailToken.findOne({ token });
+    console.log("Token from query:", token);
+    console.log("All tokens in DB:", await EmailToken.find({}));
+
+    const emailToken = await EmailToken.findOne({ token: token.trim() });
     if (!emailToken)
       return res.status(400).json({ message: "Invalid or expired token" });
 
