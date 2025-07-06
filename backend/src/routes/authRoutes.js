@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/verify", verifyEmail);
+router.get("/verify-email", verifyEmail);
 router.post("/resend-verification", resendVerification);
 
 export default router;
