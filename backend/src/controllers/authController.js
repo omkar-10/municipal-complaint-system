@@ -33,12 +33,61 @@ export const registerUser = async (req, res) => {
 
     await sendEmail(
       user.email,
-      "Verify your email – Municipal Corporation Helpdesk",
-      `Hi ${user.name}, please verify your email.`,
-      `<p>Hello ${user.name},</p>
-       <p>Click the link below to verify your email and activate your account:</p>
-       <a href="${verifyUrl}" target="_blank">Verify Email</a>
-       <p>This link will expire in 1 hour.</p>`
+      "Email Verification – Municipal Corporation Helpdesk",
+      `Dear ${user.name}, please verify your email address to activate your Municipal Helpdesk account.`,
+      `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; padding: 24px; border-radius: 8px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+  <div style="text-align: center; border-bottom: 2px solid #1e40af; padding-bottom: 16px; margin-bottom: 24px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Municipal_Corporation_of_Greater_Mumbai_logo.svg/1200px-Municipal_Corporation_of_Greater_Mumbai_logo.svg.png" 
+         alt="Municipal Corporation Logo" 
+         width="120" 
+         style="margin-bottom: 12px;" />
+    <h1 style="color: #1e40af; margin: 0; font-size: 20px;">Municipal Corporation</h1>
+    <p style="color: #4b5563; margin: 4px 0 0; font-size: 14px;">Citizen Helpdesk Portal</p>
+  </div>
+
+  <h2 style="color: #1e40af; font-size: 18px; margin-bottom: 20px; text-align: center;">
+    EMAIL VERIFICATION REQUIRED
+  </h2>
+
+  <p style="font-size: 15px; color: #374151; line-height: 1.5;">
+    Dear <strong>${user.name}</strong>,
+  </p>
+
+  <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-top: 16px;">
+    Thank you for registering with the Municipal Corporation Helpdesk Portal. To complete your registration and activate your account, please verify your email address by clicking the button below:
+  </p>
+
+  <div style="text-align: center; margin: 28px 0;">
+    <a href="${verifyUrl}" 
+       target="_blank" 
+       style="background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+      VERIFY EMAIL ADDRESS
+    </a>
+  </div>
+
+  <div style="background-color: #f8fafc; border-left: 4px solid #1e40af; padding: 12px; margin: 20px 0;">
+    <p style="font-size: 14px; color: #4b5563; margin: 0; line-height: 1.5;">
+      <strong>Important:</strong> This verification link will expire in <strong>1 hour</strong>. 
+      If you did not request this verification, please ignore this email or contact our helpdesk immediately.
+    </p>
+  </div>
+
+  <p style="font-size: 14px; color: #4b5563; line-height: 1.6; margin-top: 24px;">
+    For security reasons, please do not share this email with anyone. Municipal Corporation representatives will never ask you for your password or verification links.
+  </p>
+
+  <div style="border-top: 1px solid #e5e7eb; margin-top: 32px; padding-top: 16px;">
+    <p style="font-size: 13px; color: #6b7280; text-align: center; margin-bottom: 8px;">
+      <strong>Municipal Corporation Helpdesk</strong><br/>
+      Email: helpdesk@municipal.gov.in | Helpline: 1800-XXX-XXXX
+    </p>
+    <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">
+      This is an auto-generated email. Please do not reply to this message.
+    </p>
+  </div>
+</div>
+`
     );
 
     // ✅ Final response (important!)
@@ -128,12 +177,64 @@ export const resendVerification = async (req, res) => {
 
     await sendEmail(
       user.email,
-      "Resend Verification – MBMC Helpdesk",
-      `Hi ${user.name}, here is your verification link again.`,
-      `<p>Hello ${user.name},</p>
-       <p>Click the link below to verify your email and activate your account:</p>
-       <a href="${verifyUrl}" target="_blank">Verify Email</a>
-       <p>This link will expire in 1 hour.</p>`
+      "Email Verification – MBMC Helpdesk",
+      `Dear ${user.name}, please verify your email address to activate your MBMC Helpdesk account.`,
+      `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; padding: 24px; border-radius: 8px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+  <div style="text-align: center; border-bottom: 2px solid #1e40af; padding-bottom: 16px; margin-bottom: 24px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Municipal_Corporation_of_Greater_Mumbai_logo.svg/1200px-Municipal_Corporation_of_Greater_Mumbai_logo.svg.png" 
+         alt="MBMC Logo" 
+         width="120" 
+         style="margin-bottom: 12px;" />
+    <h1 style="color: #1e40af; margin: 0; font-size: 20px;">Municipal Corporation of Greater Mumbai</h1>
+    <p style="color: #4b5563; margin: 4px 0 0; font-size: 14px;">Public Grievance Redressal System</p>
+  </div>
+
+  <h2 style="color: #1e40af; font-size: 18px; margin-bottom: 20px; text-align: center;">
+    EMAIL VERIFICATION REQUIRED
+  </h2>
+
+  <p style="font-size: 15px; color: #374151; line-height: 1.5;">
+    To,<br/>
+    <strong>${user.name}</strong><br/>
+    ${user.email}
+  </p>
+
+  <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-top: 16px;">
+    Thank you for registering with the MBMC Helpdesk Portal. To complete your registration and activate your account, please verify your email address by clicking the button below:
+  </p>
+
+  <div style="text-align: center; margin: 28px 0;">
+    <a href="${verifyUrl}" 
+       target="_blank" 
+       style="background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+      VERIFY EMAIL ADDRESS
+    </a>
+  </div>
+
+  <div style="background-color: #f8fafc; border-left: 4px solid #1e40af; padding: 12px; margin: 20px 0;">
+    <p style="font-size: 14px; color: #4b5563; margin: 0; line-height: 1.5;">
+      <strong>Important:</strong> This verification link will expire in <strong>1 hour</strong>. 
+      If you did not request this verification, please ignore this email or contact our helpdesk immediately.
+    </p>
+  </div>
+
+  <p style="font-size: 14px; color: #4b5563; line-height: 1.6; margin-top: 24px;">
+    For security reasons, please do not share this email with anyone. MBMC representatives will never ask you for your password or verification links.
+  </p>
+
+  <div style="border-top: 1px solid #e5e7eb; margin-top: 32px; padding-top: 16px;">
+    <p style="font-size: 13px; color: #6b7280; text-align: center; margin-bottom: 8px;">
+      <strong>MBMC Helpdesk Support</strong><br/>
+      Municipal Corporation of Greater Mumbai<br/>
+      Tel: 1800-XXX-XXXX | Email: helpdesk@mbmc.gov.in
+    </p>
+    <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">
+      This is an auto-generated email. Please do not reply to this message.
+    </p>
+  </div>
+</div>
+`
     );
 
     res.json({ message: "Verification email resent" });
