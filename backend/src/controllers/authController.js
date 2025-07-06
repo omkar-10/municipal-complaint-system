@@ -38,7 +38,7 @@ export const registerUser = async (req, res) => {
       `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; padding: 24px; border-radius: 8px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
   <div style="text-align: center; border-bottom: 2px solid #1e40af; padding-bottom: 16px; margin-bottom: 24px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Municipal_Corporation_of_Greater_Mumbai_logo.svg/1200px-Municipal_Corporation_of_Greater_Mumbai_logo.svg.png" 
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" 
          alt="Municipal Corporation Logo" 
          width="120" 
          style="margin-bottom: 12px;" />
@@ -177,13 +177,13 @@ export const resendVerification = async (req, res) => {
 
     await sendEmail(
       user.email,
-      "Email Verification – MBMC Helpdesk",
-      `Dear ${user.name}, please verify your email address to activate your MBMC Helpdesk account.`,
+      "Email Verification – Municipal Corporation Helpdesk",
+      `Dear ${user.name}, please verify your email address to activate your Municipal Corporation Helpdesk account.`,
       `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; padding: 24px; border-radius: 8px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
   <div style="text-align: center; border-bottom: 2px solid #1e40af; padding-bottom: 16px; margin-bottom: 24px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Municipal_Corporation_of_Greater_Mumbai_logo.svg/1200px-Municipal_Corporation_of_Greater_Mumbai_logo.svg.png" 
-         alt="MBMC Logo" 
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" 
+         alt="Municipal Corporation Logo" 
          width="120" 
          style="margin-bottom: 12px;" />
     <h1 style="color: #1e40af; margin: 0; font-size: 20px;">Municipal Corporation of Greater Mumbai</h1>
@@ -201,7 +201,7 @@ export const resendVerification = async (req, res) => {
   </p>
 
   <p style="font-size: 15px; color: #374151; line-height: 1.6; margin-top: 16px;">
-    Thank you for registering with the MBMC Helpdesk Portal. To complete your registration and activate your account, please verify your email address by clicking the button below:
+    Thank you for registering with the Municipal Corporation Helpdesk Portal. To complete your registration and activate your account, please verify your email address by clicking the button below:
   </p>
 
   <div style="text-align: center; margin: 28px 0;">
@@ -220,14 +220,14 @@ export const resendVerification = async (req, res) => {
   </div>
 
   <p style="font-size: 14px; color: #4b5563; line-height: 1.6; margin-top: 24px;">
-    For security reasons, please do not share this email with anyone. MBMC representatives will never ask you for your password or verification links.
+    For security reasons, please do not share this email with anyone. Municipal Corporation representatives will never ask you for your password or verification links.
   </p>
 
   <div style="border-top: 1px solid #e5e7eb; margin-top: 32px; padding-top: 16px;">
     <p style="font-size: 13px; color: #6b7280; text-align: center; margin-bottom: 8px;">
-      <strong>MBMC Helpdesk Support</strong><br/>
+      <strong>Municipal Corporation Helpdesk Support</strong><br/>
       Municipal Corporation of Greater Mumbai<br/>
-      Tel: 1800-XXX-XXXX | Email: helpdesk@mbmc.gov.in
+      Tel: 1800-XXX-XXXX | Email: helpdesk@municipalcorp.gov.in
     </p>
     <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">
       This is an auto-generated email. Please do not reply to this message.

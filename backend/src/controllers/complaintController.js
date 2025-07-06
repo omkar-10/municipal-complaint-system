@@ -287,7 +287,7 @@ export const rejectComplaint = async (req, res) => {
         `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #d3d3d3; padding: 24px; border-radius: 8px; background-color: #f9f9f9;">
     <div style="text-align: center;">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="MBMC Logo" width="80" style="margin-bottom: 16px;" />
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s" alt="Municipal Corporation Logo" width="80" style="margin-bottom: 16px;" />
     </div>
     <h2 style="color: #1e3a8a; text-align: center; font-size: 22px; margin-bottom: 20px;">Municipal Helpdesk Notification</h2>
     <p style="font-size: 16px; color: #333;">To,<br/>
