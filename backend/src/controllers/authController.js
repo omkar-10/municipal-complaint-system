@@ -64,7 +64,8 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    if (!user.isVerified) {
+    // ✅ Skip verification check for admin
+    if (user.role !== "admin" && !user.isVerified) {
       return res
         .status(403)
         .json({ message: "Please verify your email before logging in." });
