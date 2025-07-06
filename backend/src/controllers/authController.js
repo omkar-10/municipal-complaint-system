@@ -104,3 +104,37 @@ export const verifyEmail = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+export const resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.isVerified)
+      return res.status(400).json({ message: "User already verified" });
+
+    // Remove existing tokens
+    await EmailToken.deleteMany({ userId: user._id });
+
+    const token = crypto.randomBytes(32).toString("hex");
+    await EmailToken.create({ userId: user._id, token });
+
+    const verifyUrl = `https://nagarseva.vercel.app/verify?token=${token}`;
+
+    await sendEmail(
+      user.email,
+      "Resend Verification – MBMC Helpdesk",
+      `Hi ${user.name}, here is your verification link again.`,
+      `<p>Hello ${user.name},</p>
+       <p>Click the link below to verify your email and activate your account:</p>
+       <a href="${verifyUrl}" target="_blank">Verify Email</a>
+       <p>This link will expire in 1 hour.</p>`
+    );
+
+    res.json({ message: "Verification email resent" });
+  } catch (err) {
+    console.error("Error in resendVerification:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
