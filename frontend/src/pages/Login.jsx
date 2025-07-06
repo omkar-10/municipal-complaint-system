@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom"; // ✅ FIXED import
+import { Link } from "react-router"; // ✅ FIXED import
 import toast from "react-hot-toast";
 import api from "../utils/axiosInstance.js";
 import { Lock, Mail, LogIn } from "lucide-react";
