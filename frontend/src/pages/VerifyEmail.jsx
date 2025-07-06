@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 import api from "../utils/axiosInstance";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
