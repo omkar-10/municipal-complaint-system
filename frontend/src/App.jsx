@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NewComplaint from "./pages/NewComplaint";
 import ComplaintDetail from "./pages/ComplaintDetail";
 import PrivateRoute from "./components/PrivateRoute";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -42,6 +43,7 @@ function App() {
 
       {/* Catch-all for invalid routes */}
       <Route path="*" element={<Navigate to="/" />} />
+      <Route path="/verify" element={<VerifyEmail />} />
     </Routes>
   );
 }

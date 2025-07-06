@@ -23,16 +23,25 @@ const Register = () => {
     }
 
     try {
-      const res = await api.post("/auth/register", {
+      await api.post("/auth/register", {
         name,
         email,
         password,
       });
 
-      const data = res.data;
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      toast.success("Registration successful!");
-      navigate("/citizen/dashboard");
+      toast.success("📬 Verification email sent!");
+      toast("Please check your inbox to verify your email.");
+
+      // Reset form fields
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      // Optional: Redirect to login page after a delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed");
     } finally {
