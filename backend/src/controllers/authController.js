@@ -1,5 +1,8 @@
 import User from "../models/User.js";
+import EmailToken from "../models/EmailToken.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import { sendEmail } from "../utils/sendEmail.js";
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
@@ -20,17 +23,33 @@ export const registerUser = async (req, res) => {
       email,
       password,
       role: "citizen",
+      isVerified: false,
     });
 
+    // Generate verification token
+    const token = crypto.randomBytes(32).toString("hex");
+    await EmailToken.create({
+      userId: user._id,
+      token,
+    });
+
+    const verifyUrl = `https://nagarseva.vercel.app/verify?token=${token}`;
+
+    await sendEmail(
+      user.email,
+      "Verify your email – MBMC Helpdesk",
+      `Hi ${user.name}, please verify your email.`,
+      `<p>Hello ${user.name},</p>
+       <p>Click the link below to verify your email and activate your account:</p>
+       <a href="${verifyUrl}" target="_blank">Verify Email</a>
+       <p>This link will expire in 1 hour.</p>`
+    );
+
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token: generateToken(user),
+      message: "Verification email sent. Please check your inbox.",
     });
   } catch (error) {
-    console.error("Error in the registerUser controller", error);
+    console.error("Error in registerUser:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -39,25 +58,49 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if the user exists
     const user = await User.findOne({ email });
 
-    // Check password
     if (!user || !(await user.matchPassword(password))) {
-      console.warn("❌ Invalid login attempt for email:", email);
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Success
+    if (!user.isVerified) {
+      return res
+        .status(403)
+        .json({ message: "Please verify your email before logging in." });
+    }
+
     res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id), // ✅ Pass user._id instead of full user
+      token: generateToken(user),
     });
   } catch (error) {
-    console.error("❌ Error in the loginUser controller:", error.message);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("❌ Error in loginUser:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    const emailToken = await EmailToken.findOne({ token });
+    if (!emailToken)
+      return res.status(400).json({ message: "Invalid or expired token" });
+
+    const user = await User.findById(emailToken.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.isVerified = true;
+    await user.save();
+    await emailToken.deleteOne();
+
+    res.status(200).json({ message: "Email verified successfully" });
+  } catch (err) {
+    console.error("Error in verifyEmail:", err);
+    res.status(500).json({ message: "Server Error" });
   }
 };
