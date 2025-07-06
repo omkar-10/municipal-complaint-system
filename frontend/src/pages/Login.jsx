@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Link } from "react-router";
+import { Link } from "react-router-dom"; // ✅ FIXED import
 import toast from "react-hot-toast";
 import api from "../utils/axiosInstance.js";
 import { Lock, Mail, LogIn } from "lucide-react";
@@ -112,7 +112,7 @@ const Login = () => {
             {/* Error Message with Resend Link */}
             {error && (
               <div className="text-sm text-red-500">
-                {error === "Please verify your email before logging in" ? (
+                {error.toLowerCase().includes("verify your email") ? (
                   <p>
                     Please verify your email.{" "}
                     <Link
