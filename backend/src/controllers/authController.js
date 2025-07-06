@@ -33,7 +33,7 @@ export const registerUser = async (req, res) => {
       token,
     });
 
-    const verifyUrl = `https://nagarseva.vercel.app/verify?token=${token}`;
+    const verifyUrl = `https://municipal-complaint-system-backend.onrender.com/api/auth/verify-email?token=${token}`;
 
     const sent = await sendEmail(
       user.email,
