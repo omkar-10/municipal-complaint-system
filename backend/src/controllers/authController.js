@@ -26,8 +26,8 @@ export const registerUser = async (req, res) => {
       isVerified: false,
     });
 
-    // Generate verification token
     const token = crypto.randomBytes(32).toString("hex");
+
     await EmailToken.create({
       userId: user._id,
       token,
@@ -35,7 +35,7 @@ export const registerUser = async (req, res) => {
 
     const verifyUrl = `https://nagarseva.vercel.app/verify?token=${token}`;
 
-    await sendEmail(
+    const sent = await sendEmail(
       user.email,
       "Verify your email – MBMC Helpdesk",
       `Hi ${user.name}, please verify your email.`,
@@ -44,6 +44,14 @@ export const registerUser = async (req, res) => {
        <a href="${verifyUrl}" target="_blank">Verify Email</a>
        <p>This link will expire in 1 hour.</p>`
     );
+
+    if (!sent) {
+      // Optional: delete unverified user if email fails
+      await User.findByIdAndDelete(user._id);
+      return res
+        .status(500)
+        .json({ message: "Failed to send verification email" });
+    }
 
     res.status(201).json({
       message: "Verification email sent. Please check your inbox.",
