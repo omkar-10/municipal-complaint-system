@@ -27,17 +27,13 @@ export const registerUser = async (req, res) => {
     });
 
     const token = crypto.randomBytes(32).toString("hex");
+    await EmailToken.create({ userId: user._id, token });
 
-    await EmailToken.create({
-      userId: user._id,
-      token,
-    });
+    const verifyUrl = `https://nagarseva.vercel.app/verify?token=${token}`;
 
-    const verifyUrl = `https://municipal-complaint-system-backend.onrender.com/api/auth/verify-email?token=${token}`;
-
-    const sent = await sendEmail(
+    await sendEmail(
       user.email,
-      "Verify your email – MBMC Helpdesk",
+      "Verify your email – Municipal Corporation Helpdesk",
       `Hi ${user.name}, please verify your email.`,
       `<p>Hello ${user.name},</p>
        <p>Click the link below to verify your email and activate your account:</p>
@@ -45,20 +41,16 @@ export const registerUser = async (req, res) => {
        <p>This link will expire in 1 hour.</p>`
     );
 
-    if (!sent) {
-      // Optional: delete unverified user if email fails
-      await User.findByIdAndDelete(user._id);
-      return res
-        .status(500)
-        .json({ message: "Failed to send verification email" });
-    }
-
-    res.status(201).json({
+    // ✅ Final response (important!)
+    return res.status(201).json({
       message: "Verification email sent. Please check your inbox.",
     });
   } catch (error) {
-    console.error("Error in registerUser:", error);
-    res.status(500).json({ message: "Server Error" });
+    console.error("❌ Error in registerUser:", error);
+    return res.status(500).json({
+      message: "Server Error",
+      error: error.message,
+    });
   }
 };
 
