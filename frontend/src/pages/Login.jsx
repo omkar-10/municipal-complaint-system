@@ -1,21 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router"; // ✅ Correct import
-import api from "../utils/axiosInstance.js";
-import { Link } from "react-router"; // ✅ Correct import
+import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import toast from "react-hot-toast";
+import api from "../utils/axiosInstance.js";
 import { Lock, Mail, LogIn } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
-    // ✅ Basic email validation
     if (!email.includes("@") || !email.includes(".")) {
       toast.error("Please enter a valid email address");
       setIsLoading(false);
@@ -23,23 +24,21 @@ const Login = () => {
     }
 
     try {
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
-
+      const res = await api.post("/auth/login", { email, password });
       const data = res.data;
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       toast.success("Login successful!");
 
-      // ✅ Redirect based on role
       if (data.role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/citizen/dashboard");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      const message = err.response?.data?.message || "Login failed";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +48,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="card w-full max-w-md bg-white shadow-xl">
         <div className="card-body p-8">
+          {/* Header */}
           <div className="flex flex-col items-center mb-6">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWyELeC-GcbNeC4OGWqZxmk0NJwYonRLO81A&s"
@@ -63,8 +63,9 @@ const Login = () => {
             </p>
           </div>
 
+          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
-            {/* Email Field */}
+            {/* Email */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text flex items-center gap-2">
@@ -86,7 +87,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text flex items-center gap-2">
@@ -108,8 +109,27 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Error Message with Resend Link */}
+            {error && (
+              <div className="text-sm text-red-500">
+                {error === "Please verify your email before logging in" ? (
+                  <p>
+                    Please verify your email.{" "}
+                    <Link
+                      to="/resend-verification"
+                      className="underline text-blue-600"
+                    >
+                      Resend verification link
+                    </Link>
+                  </p>
+                ) : (
+                  <p>{error}</p>
+                )}
+              </div>
+            )}
+
             {/* Login Button */}
-            <div className="form-control mt-8">
+            <div className="form-control mt-6">
               <button
                 className={`btn btn-primary w-full ${
                   isLoading ? "btn-disabled" : ""
@@ -131,6 +151,7 @@ const Login = () => {
             </div>
           </form>
 
+          {/* Divider & Register */}
           <div className="divider my-6">OR</div>
 
           <div className="text-center">
